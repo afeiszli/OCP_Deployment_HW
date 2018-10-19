@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: pv-template
+parameters:
+  - name: "VOLUME_NAME"
+    displayName: "Volume Name"
+    description: "The volume name."
+    required: true
+  - name: "VOLSIZE"
+    displayName: "Volume Size"
+    description: "The size of the volume to be created"
+    required: true
+  - name: "HOST"
+    displayName: "The GUID of the host"
+    required: true
+objects:
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: ${VOLUME_NAME}
+  spec:
+    capacity:
+      storage: ${VOLSIZE}
+    accessModes:
+    - ReadWriteMany
+    - ReadWriteOnce
+    nfs:
+      path: "/srv/nfs/user-vols/${VOLUME_NAME}"
+      server: support1.${HOST}.internal
+    persistentVolumeReclaimPolicy: Recycle
