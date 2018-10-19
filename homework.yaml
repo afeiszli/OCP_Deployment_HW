@@ -21,15 +21,15 @@
     - name: required packages are present
       yum:
         name:
-          - ????
-          - ????
+          - atomic-openshift
+          - atomic-openshift-clients
         state: present
 
 - name: Generate Inventory Hosts File
   hosts: localhost
   tasks:
     - name: Generate Inventory script
-      script: /root/ocp_advanced_deployment_homework/scripts/generate_inventory.sh
+      script: ./scripts/generate_inventory.sh
 
 - name: Execute the openshift-ansible prerequisites
   import_playbook: ???
@@ -59,8 +59,14 @@
 
 - name: Create 25 definitions files for PVs 5G size
   hosts: localhost
+  tasks:
+    - name: Create 5G PVs
+      script: ./scripts/pvs_5Gsize.sh
 
 - name: Create 25 definitions files for PVs 10G size
+  tasks:
+    - name: Create 10G PVs
+      script: ./scripts/pvs_10Gsize.sh
 
 - name: Create all PVs from definitions files
 
