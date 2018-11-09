@@ -32,16 +32,16 @@
       script: ./scripts/generate_inventory.sh
 
 - name: Execute the openshift-ansible prerequisites
-  import_playbook: ???
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
 
 - name: Execute the openshift-ansible Deployer
-  import_playbook: ???
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 
-- name: Verify OpenShift Cluster
-  hosts: masters[0]
-  tasks:
-    - name: copy the .kube directory from master1 to your bastion
-    ????
+#- name: Verify OpenShift Cluster
+#  hosts: masters[0]
+#  tasks:
+#    - name: copy the .kube directory from master1 to your bastion
+#    ????
 
 - name: Post installation configuration
   hosts: localhost
@@ -53,7 +53,7 @@
   hosts: nfs
   tasks:
     - name:
-      script: ????
+      script: ./scripts/create_pvs.sh
     - name: Restarting NFS Server...
       shell: systemctl restart nfs-server
 
@@ -74,11 +74,11 @@
 
 - name: Smoke Test
 
-- name: Jenkins Setup
-  hosts: localhost
-  tasks:
-    - name: jenkins setup
-      script: ???
+#- name: Jenkins Setup
+#  hosts: localhost
+#  tasks:
+#    - name: jenkins setup
+#      script: ???
 
 - name: HPA configuration on production deployment of openshift-tasks
   hosts: localhost
@@ -91,4 +91,3 @@
 - name: Setup the environment for Alpha and Beta clients
 
 
-  ....
