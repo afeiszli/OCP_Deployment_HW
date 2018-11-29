@@ -1,0 +1,31 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    description: Defines how to build the application
+    template.alpha.openshift.io/wait-for-ready: 'true'
+  labels:
+    app: openshift-tasks
+    template: openshift-tasks
+  name: openshift-tasks
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'openshift-tasks:latest'
+  runPolicy: Serial
+  source:
+    git:
+      uri: 'https://github.com/openshift/httpd-ex.git'
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 'httpd:2.4'
+        namespace: openshift
+    type: Source
+  triggers:
+    - imageChange:
+      type: ImageChange
+    - type: ConfigChange

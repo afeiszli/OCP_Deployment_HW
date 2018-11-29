@@ -41,6 +41,19 @@ objects:
   userNames:
   - ${PROJECT_ADMIN_USER}
 - apiVersion: v1
+  groupNames: []
+  kind: RoleBinding
+  metadata:
+    name: editors
+    namespace: ${PROJECT_NAME}
+  roleRef:
+    name: edit
+  subjects:
+  - kind: User
+    name: system:serviceaccounts:${JENKINS_PROJECT_NAME}:jenkins
+  userNames:
+  - ${PROJECT_ADMIN_USER}
+- apiVersion: v1
   groupNames:
   - system:serviceaccounts:${PROJECT_NAME}
   kind: RoleBinding
@@ -79,6 +92,7 @@ objects:
     name: deployer
   userNames:
   - system:serviceaccount:${PROJECT_NAME}:deployer
+  - system:serviceaccount:${JENKINS_PROJECT_NAME}:jenkins
 parameters:
 - name: PROJECT_NAME
   required: true

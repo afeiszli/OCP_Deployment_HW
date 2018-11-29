@@ -1,0 +1,101 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    description: Defines how to deploy the application server
+    template.alpha.openshift.io/wait-for-ready: 'true'
+  labels:
+    app: httpd-example
+    template: httpd-example
+  name: httpd-example
+spec:
+  replicas: 1
+  selector:
+    name: httpd-example
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: httpd-example
+      name: httpd-example
+    spec:
+      containers:
+        - image: >-
+            docker-registry.default.svc:5000/hw-space/httpd-example:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: httpd-example
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - httpd-example
+        from:
+          kind: ImageStreamTag
+          name: 'httpd-example:latest'
+          namespace: hw-space
+        lastTriggeredImage: >-
+          docker-registry.default.svc:5000/hw-space/httpd-example@sha256:07bb9a85ddbe48b3111e67c0c18b6541f5ad387390a49957f7e266877e2ed438
+      type: ImageChange
+    - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2018-11-09T21:19:50Z'
+      lastUpdateTime: '2018-11-09T21:19:50Z'
+      message: Deployment config has minimum availability.
+      status: 'True'
+      type: Available
+    - lastTransitionTime: '2018-11-09T21:19:43Z'
+      lastUpdateTime: '2018-11-09T21:19:51Z'
+      message: replication controller "httpd-example-1" successfully rolled out
+      reason: NewReplicationControllerAvailable
+      status: 'True'
+      type: Progressing
+  details:
+    causes:
+      - type: ConfigChange
+    message: config change

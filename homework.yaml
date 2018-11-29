@@ -14,6 +14,10 @@
 - name: Verify NFS Shared Volumes on Hosts
   hosts: nfs
   tasks:
+    - name: check NFS status
+      shell: systemctl status nfs
+      shell: exportfs
+      register: exportedfs
 
 - name: Install packages and config auth
   hosts: localhost
@@ -37,11 +41,11 @@
 - name: Execute the openshift-ansible Deployer
   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 
-#- name: Verify OpenShift Cluster
-#  hosts: masters[0]
-#  tasks:
-#    - name: copy the .kube directory from master1 to your bastion
-#    ????
+- name: Verify OpenShift Cluster
+  hosts: masters[0]
+  tasks:
+    - name: copy the .kube directory from master1 to your bastion
+      fetch: src=/root/.kube/config dest=/root/.kube/config flat=yes
 
 - name: Post installation configuration
   hosts: localhost
@@ -52,7 +56,7 @@
 - name: Create PVs for Users
   hosts: nfs
   tasks:
-    - name:
+    - name: Create the PV's for users
       script: ./scripts/create_pvs.sh
     - name: Restarting NFS Server...
       shell: systemctl restart nfs-server
@@ -69,16 +73,26 @@
       script: ./scripts/pvs_10Gsize.sh
 
 - name: Create all PVs from definitions files
+  hosts: localhost
+  tasks:
+    - name: Create PVs from definition files
+      shell: cat /root/pvs/* | oc create -f -
 
 - name: Fix NFS Persistent Volume Recycling
 
 - name: Smoke Test
+  hosts: localhost
+  tasks:
+    - name: Create project
+      shell: oc process -f ./appdev/project.yaml -p PROJECT_NAME=test-project | oc create -f -
+    - name: Deploy app to project
+      shell: oc new-app -n test-project nodejs-mongo-persistent 
 
-#- name: Jenkins Setup
-#  hosts: localhost
-#  tasks:
-#    - name: jenkins setup
-#      script: ???
+- name: Jenkins Setup
+  hosts: localhost
+  tasks:
+    - name: jenkins setup
+      script: ????
 
 - name: HPA configuration on production deployment of openshift-tasks
   hosts: localhost
