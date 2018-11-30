@@ -16,6 +16,7 @@
   tasks:
     - name: check NFS status
       shell: systemctl status nfs
+    - name: exportfs
       shell: exportfs
       register: exportedfs
 
@@ -50,7 +51,7 @@
 - name: Post installation configuration
   hosts: localhost
   tasks:
-    - name: make sure you are system:dmin
+    - name: make sure you are system:admin
       shell: oc whoami | grep system:admin
 
 - name: Create PVs for Users
@@ -79,6 +80,10 @@
       shell: cat /root/pvs/* | oc create -f -
 
 - name: Fix NFS Persistent Volume Recycling
+  hosts: nodes
+  tasks: 
+    - name: Get the Recycler
+      shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest 
 
 - name: Smoke Test
   hosts: localhost
@@ -92,11 +97,15 @@
   hosts: localhost
   tasks:
     - name: jenkins setup
-      script: ????
+      script: ./appdev/cicd-setup.sh
 
 - name: HPA configuration on production deployment of openshift-tasks
   hosts: localhost
   tasks:
+#    - name: Create LimitRange
+#      shell: oc create -f - ./appdev/hpa.yaml -n qa
+#    - name: Autoscale tasks
+#     shell: oc autoscale dc openshift-tasks --min 1 --max 3 --cpu-percent=85 -n qa
 
 - name: Creation of users for Alpha and Beta clients
 
