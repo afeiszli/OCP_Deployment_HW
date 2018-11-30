@@ -16,16 +16,16 @@ spec:
   runPolicy: Serial
   source:
     git:
-      uri: 'https://github.com/openshift/httpd-ex.git'
+      uri: 'https://github.com/wkulhanek/openshift-tasks.git'
     type: Git
   strategy:
     sourceStrategy:
       from:
         kind: ImageStreamTag
-        name: 'httpd:2.4'
+        name: 'eap70-basic-s2i'
         namespace: openshift
     type: Source
   triggers:
     - imageChange:
       type: ImageChange
-    - type: ConfigChange
+    - type: ConfigChange`

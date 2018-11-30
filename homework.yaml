@@ -16,6 +16,7 @@
   tasks:
     - name: check NFS status
       shell: systemctl status nfs
+    - name: exportfs
       shell: exportfs
       register: exportedfs
 
