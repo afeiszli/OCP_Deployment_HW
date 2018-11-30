@@ -14,6 +14,11 @@ openshift_disable_check="disk_availability,memory_availability,docker_image_avai
 
 openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true','runtime=docker']}, {'name': 'node-config-infra', 'labels': ['node-role.kubernetes.io/infra=true','runtime=docker']}, {'name': 'node-config-glusterfs', 'labels': ['runtime=docker']}, {'name': 'node-config-compute', 'labels': ['node-role.kubernetes.io/compute=true','runtime=docker'], 'edits': [{ 'key': 'kubeletArguments.pods-per-core','value': ['20']}]}]
 
+#choose release version
+openshift_release='3.11'
+
+#lets see if this fixes the oreg issue
+oreg_url=registry.access.redhat.com/openshift3/ose-${component}:${version}
 
 openshift_deployment_type=openshift-enterprise
 #deployment_type=openshift-enterprise
@@ -32,9 +37,9 @@ openshift_master_api_port=443
 openshift_master_console_port=443
 
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=loadbalancer1.02f2.internal
-openshift_master_cluster_public_hostname=loadbalancer1.02f2.example.opentlc.com
-openshift_master_default_subdomain=apps.02f2.example.opentlc.com
+openshift_master_cluster_hostname=loadbalancer1.c924.internal
+openshift_master_cluster_public_hostname=loadbalancer1.c924.example.opentlc.com
+openshift_master_default_subdomain=apps.c924.example.opentlc.com
 #openshift_master_ca_certificate={'certfile': '/root/intermediate_ca.crt', 'keyfile': '/root/intermediate_ca.key'}
 openshift_master_overwrite_named_certificates=True
 
@@ -52,8 +57,10 @@ os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
 ###########################################################################
 
 # ldap or htpasswd 
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 #NEED TO MAKE SURE WE HAVE HTPASSWD FILE IN PLACE
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_file=/root/htpasswd.openshift
 
 ###########################################################################
 ### OpenShift Router and Registry Vars
@@ -165,32 +172,32 @@ nodes
 nfs
 
 [lb]
-loadbalancer1.02f2.internal
+loadbalancer1.c924.internal
 
 [masters]
-master1.02f2.internal
-master2.02f2.internal
-master3.02f2.internal
+master1.c924.internal
+master2.c924.internal
+master3.c924.internal
 
 [etcd]
-master1.02f2.internal
-master2.02f2.internal
-master3.02f2.internal
+master1.c924.internal
+master2.c924.internal
+master3.c924.internal
 
 [nodes]
 ## These are the masters
-master1.02f2.internal openshift_hostname=master1.02f2.internal openshift_node_group_name='node-config-master'
-master2.02f2.internal openshift_hostname=master2.02f2.internal openshift_node_group_name='node-config-master'
-master3.02f2.internal openshift_hostname=master3.02f2.internal openshift_node_group_name='node-config-master'
+master1.c924.internal openshift_hostname=master1.c924.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
+master2.c924.internal openshift_hostname=master2.c924.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
+master3.c924.internal openshift_hostname=master3.c924.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
 
 ## These are infranodes
-infranode1.02f2.internal openshift_hostname=infranode1.02f2.internal  openshift_node_group_name='node-config-infra'
-infranode2.02f2.internal openshift_hostname=infranode2.02f2.internal  openshift_node_group_name='node-config-infra'
+infranode1.c924.internal openshift_hostname=infranode1.c924.internal  openshift_node_group_name='node-config-infra' openshift_node_labels="{'env':'infra'}"
+infranode2.c924.internal openshift_hostname=infranode2.c924.internal  openshift_node_group_name='node-config-infra' openshift_node_labels="{'env':'infra'}"
 
 ## These are regular nodes
-node1.02f2.internal openshift_hostname=node1.02f2.internal  openshift_node_group_name='node-config-compute'
-node2.02f2.internal openshift_hostname=node2.02f2.internal  openshift_node_group_name='node-config-compute'
-node3.02f2.internal openshift_hostname=node3.02f2.internal  openshift_node_group_name='node-config-compute'
+node1.c924.internal openshift_hostname=node1.c924.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'alpha'}"
+node2.c924.internal openshift_hostname=node2.c924.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'beta'}"
+node3.c924.internal openshift_hostname=node3.c924.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'common'}"
 
 [nfs]
-support1.02f2.internal openshift_hostname=support1.02f2.internal
+support1.c924.internal openshift_hostname=support1.c924.internal
