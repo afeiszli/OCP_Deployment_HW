@@ -35,7 +35,9 @@
   tasks:
     - name: Generate Inventory script
       script: ./scripts/generate_inventory.sh
-
+      register: out
+    - debug: msg={{ out.stderr }}
+      
 - name: Execute the openshift-ansible prerequisites
   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
 
@@ -46,7 +48,9 @@
   hosts: masters[0]
   tasks:
     - name: copy the .kube directory from master1 to your bastion
-      fetch: src=/root/.kube/config dest=/root/.kube/config flat=yes
+      fetch: src=/root/.kube/config dest=~/.kube/config flat=yes
+      register: kubeout
+    - debug: msg={{ kubeout.stderr }}
 
 - name: Post installation configuration
   hosts: localhost
