@@ -1,4 +1,5 @@
 [OSEv3:vars]
+
 ### Alex's Inventory File
 ###########################################################################
 ### Ansible Vars
@@ -18,7 +19,7 @@ openshift_disable_check="disk_availability,memory_availability,docker_image_avai
 openshift_image_tag=v3.11.51
 # Use this variable to specify an RPM version to install or configure.
 openshift_pkg_version=-3.11.51
-openshift_release=3.11.51
+openshift_release="3.11.51"
 
 
 # Node Groups
@@ -33,7 +34,9 @@ openshift_enable_olm=false
 ### OpenShift Registries Locations
 ###########################################################################
 
-oreg_url=registry.redhat.io/openshift3/ose-${component}:${version}
+oreg_url=registry.access.redhat.com/openshift3/ose-${component}:${version}
+
+#oreg_url=registry.redhat.io/openshift3/ose-${component}:${version}
 #oreg_auth_user=REPLACE_ME
 #oreg_auth_password=REPLACE_ME
 
@@ -263,6 +266,4 @@ node2.GUID.internal openshift_node_group_name='node-config-compute' openshift_no
 
 [nfs]
 support1.GUID.internal
-
-                                                                    269,0-1       Bot
 
