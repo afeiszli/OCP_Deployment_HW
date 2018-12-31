@@ -12,7 +12,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'openshift-tasks:latest'
+      name: 'openshift/openshift-tasks:latest'  
   runPolicy: Serial
   source:
     git:
@@ -22,7 +22,7 @@ spec:
     sourceStrategy:
       from:
         kind: ImageStreamTag
-        name: 'eap70-basic-s2i'
+        name: 'eap70-basic-s2i:latest'
         namespace: openshift
     type: Source
   triggers:

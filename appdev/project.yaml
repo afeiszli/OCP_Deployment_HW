@@ -28,32 +28,6 @@ objects:
             memory: 5Mi
             cpu: 10m
 - apiVersion: v1
-  groupNames: []
-  kind: RoleBinding
-  metadata:
-    name: admins
-    namespace: ${PROJECT_NAME}
-  roleRef:
-    name: admin
-  subjects:
-  - kind: User
-    name: ${PROJECT_ADMIN_USER}
-  userNames:
-  - ${PROJECT_ADMIN_USER}
-- apiVersion: v1
-  groupNames: []
-  kind: RoleBinding
-  metadata:
-    name: editors
-    namespace: ${PROJECT_NAME}
-  roleRef:
-    name: edit
-  subjects:
-  - kind: User
-    name: system:serviceaccounts:${JENKINS_PROJECT_NAME}:jenkins
-  userNames:
-  - ${PROJECT_ADMIN_USER}
-- apiVersion: v1
   groupNames:
   - system:serviceaccounts:${PROJECT_NAME}
   kind: RoleBinding
@@ -96,7 +70,3 @@ objects:
 parameters:
 - name: PROJECT_NAME
   required: true
-- name: PROJECT_ADMIN_USER
-  required: true
-  default: admin
-

@@ -13,20 +13,20 @@ spec:
     jenkinsPipelineStrategy:
       jenkinsfile: |-
         node('') {
-          stage 'Build Tasks App in tasks-build project'
+          stage 'Build Tasks'
             openshiftBuild(namespace:'tasks-build',buildConfig: 'tasks', showBuildLogs: 'true')
-          stage 'Deploy Tasks App in Dev'
+          stage 'Deploy Tasks in Dev'
             openshiftDeploy(namespace:'tasks-dev',deploymentConfig: 'tasks')
             openshiftScale(namespace:'tasks',deploymentConfig: 'tasks',replicaCount: '1')
-          stage 'Deploy Tasks App in Test'
-            input 'Is Dev ready to move to Test?'
+          stage 'Deploy Tasks in Test'
+            input 'Ready to move latest version to Test?'
             openshiftTag(namespace: 'cicd-dev', sourceStream: 'tasks',  sourceTag: 'latest', destinationStream: 'tasks', destinationTag: 'qa')
             openshiftDeploy(namespace:'tasks-test',deploymentConfig: 'tasks')
             openshiftScale(namespace:'tasks-test',deploymentConfig: 'tasks',replicaCount: '1')
-          stage 'Deploy Tasks App in Prod'
-            input 'Is Test approved for Production?'
+          stage 'Deploy Tasks in Prod'
+            input 'Ready to move latest version to Prod?'
             openshiftTag(namespace: 'cicd-dev', sourceStream: 'tasks',  sourceTag: 'qa', destinationStream: 'tasks', destinationTag: 'prod')
             openshiftDeploy(namespace:'tasks-prod',deploymentConfig: 'tasks')
             openshiftScale(namespace:'tasks-prod',deploymentConfig: 'tasks',replicaCount: '1')
 
-}
+        }

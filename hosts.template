@@ -210,6 +210,13 @@ openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
 openshift_hosted_registry_storage_volume_name=registry
 openshift_hosted_registry_storage_volume_size=20Gi
 
+
+###########################################################################
+### Cockpit Vars
+###########################################################################
+
+osm_use_cockpit=false
+
 ###########################################################################
 ### OpenShift Service Catalog Vars
 ###########################################################################

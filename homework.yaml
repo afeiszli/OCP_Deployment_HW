@@ -49,8 +49,6 @@
   tasks:
     - name: copy the .kube directory from master1 to your bastion
       fetch: src=/root/.kube/config dest=~/.kube/config flat=yes
-      register: kubeout
-    - debug: msg={{ kubeout.stderr }}
 
 - name: Post installation configuration
   hosts: localhost
@@ -66,23 +64,17 @@
     - name: Restarting NFS Server...
       shell: systemctl restart nfs-server
 
-- name: Create 25 definitions files for PVs 5G size
+- name: Create 25 PVs 5G size
   hosts: localhost
   tasks:
     - name: Create 5G PVs
       script: ./scripts/pvs_5Gsize.sh
 
-- name: Create 25 definitions files for PVs 10G size
+- name: Create 25 PVs 10G size
+  hosts: localhost
   tasks:
     - name: Create 10G PVs
       script: ./scripts/pvs_10Gsize.sh
-
-- name: Create all PVs from definitions files
-  hosts: localhost
-  tasks:
-    - name: Create PVs from definition files
-      shell: cat /root/pvs/* | oc create -f -
-
 - name: Fix NFS Persistent Volume Recycling
   hosts: nodes
   tasks: 

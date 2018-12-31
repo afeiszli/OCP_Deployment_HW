@@ -1,16 +1,16 @@
 
-oc process -f project.yaml -p PROJECT_NAME=cicd-dev | oc create -f -
-oc process -f project.yaml -p PROJECT_NAME=tasks-build | oc create -f -
-oc process -f project.yaml -p PROJECT_NAME=tasks-dev | oc create -f -
-oc process -f project.yaml -p PROJECT_NAME=tasks-qa | oc create -f -
-oc process -f project.yaml -p PROJECT_NAME=tasks-prod | oc create -f -
+oc process -f appdev/project.yaml -p PROJECT_NAME=tasks-build | oc create -f -
+oc process -f appdev/project.yaml -p PROJECT_NAME=tasks-dev | oc create -f -
+oc process -f appdev/project.yaml -p PROJECT_NAME=tasks-qa | oc create -f -
+oc process -f appdev/project.yaml -p PROJECT_NAME=tasks-prod | oc create -f -
 
-oc process -f jenkins-persistent -n cicd-dev | oc create -f -
-oc process -f tasks-build.yaml -n tasks-build | oc create -f -
-oc process -f tasks.yaml -n tasks-dev | oc create -f -
-oc process -f tasks.yaml -n tasks-qa | oc create -f -
-oc process -f tasks.yaml -n tasks-prod | oc create -f -
-oc process -f tasks-pipeline.yaml -n cicd-dev | oc create -f -
+oc new-app jenkins-persistent -n tasks-dev
+oc create is openshift-tasks -n openshift
+oc create -f appdev/tasks-build.yaml -n tasks-build
+oc process -f appdev/tasks.yaml -n tasks-dev | oc create -f -
+oc process -f appdev/tasks.yaml -n tasks-qa | oc create -f -
+oc process -f appdev/tasks.yaml -n tasks-prod | oc create -f -
+oc process -f appdev/tasks-pipeline.yaml -n cicd-dev | oc create -f -
 
 
 #oc new-app https://github.com/wkulhanek/openshift-tasks.git --name=openshift-task -n cicd

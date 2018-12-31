@@ -94,8 +94,24 @@ objects:
         - openshift-tasks
         from:
           kind: ImageStreamTag
-          name: 'openshift-tasks:${VERSION}'
-      type: ImageChange
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: openshift-tasks
+    name: openshift-tasks
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/tasks-dev/openshift-tasks:latest
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
@@ -103,6 +119,7 @@ objects:
       app: openshift-tasks
     name: openshift-tasks
   spec:
+    host: openshift-tasks-tasks-dev.apps.2f53.example.opentlc.com
     port:
       targetPort: 8080-tcp
     to:
@@ -110,7 +127,3 @@ objects:
       name: openshift-tasks
       weight: 100
     wildcardPolicy: None
-parameters:
-- name: VERSION
-  required: true
-
