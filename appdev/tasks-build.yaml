@@ -12,7 +12,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'openshift/openshift-tasks:latest'  
+      name: 'docker-registry.default.svc:5000/openshift/openshift-tasks:latest'
   runPolicy: Serial
   source:
     git:

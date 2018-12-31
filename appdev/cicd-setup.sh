@@ -1,30 +1,33 @@
+#create projects
+oc new-project tasks-build
+oc new project tasks-dev
+oc new-project tasks-test
+oc new-project tasks-prod
 
-oc process -f appdev/project.yaml -p PROJECT_NAME=tasks-build | oc create -f -
-oc process -f appdev/project.yaml -p PROJECT_NAME=tasks-dev | oc create -f -
-oc process -f appdev/project.yaml -p PROJECT_NAME=tasks-qa | oc create -f -
-oc process -f appdev/project.yaml -p PROJECT_NAME=tasks-prod | oc create -f -
+#create jenkins
+oc new-app jenkins-persistent -n tasks-build
 
-oc new-app jenkins-persistent -n tasks-dev
+#create tasks image stream
 oc create is openshift-tasks -n openshift
+
+#setup tasks app in projects
 oc create -f appdev/tasks-build.yaml -n tasks-build
-oc process -f appdev/tasks.yaml -n tasks-dev | oc create -f -
-oc process -f appdev/tasks.yaml -n tasks-test | oc create -f -
-oc process -f appdev/tasks.yaml -n tasks-prod | oc create -f -
-oc process -f appdev/tasks-pipeline.yaml -n cicd-dev | oc create -f -
+oc process -f appdev/tasks.yaml -p VERSION=dev -n tasks-dev | oc create -f - -n tasks-dev
+oc process -f appdev/tasks.yaml -p VERSION=test -n tasks-test | oc create -f - -n tasks-test
+oc process -f appdev/tasks.yaml -p VERSION=prod -n tasks-prod | oc create -f - -n tasks-prod
 
+#give jenkins edit permissions in all tasks projects
+oc policy add-role-to-user edit system:serviceaccount:tasks-build:jenkins -n tasks-build
+oc policy add-role-to-user edit system:serviceaccount:tasks-build:jenkins -n tasks-dev
+oc policy add-role-to-user edit system:serviceaccount:tasks-build:jenkins -n tasks-test
+oc policy add-role-to-user edit system:serviceaccount:tasks-build:jenkins -n tasks-prod
 
-#oc new-app https://github.com/wkulhanek/openshift-tasks.git --name=openshift-task -n cicd
-#oc new-app eap70-basic-s2i --param SOURCE_REPOSITORY_URL=https://github.com/wkulhanek/openshift-tasks.git --param APPLICATION_NAME=openshift-tasks -n tasks
+#give projects image pull permissions on openshift project
+oc policy add-role-to-user system:image-builder system:serviceaccount:tasks-build:builder -n openshift
+oc policy add-role-to-user system:image-puller system:serviceaccount:tasks-dev:deployer -n openshift
+oc policy add-role-to-user system:image-puller system:serviceaccount:tasks-test:deployer -n openshift
+oc policy add-role-to-user system:image-puller system:serviceaccount:tasks-prod:deployer -n openshift
 
-
-oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n tasks-build
-oc policy add-role-to-group system:image-puller system:serviceaccounts:cicd -n tasks-build
-oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n tasks-qa
-oc policy add-role-to-group system:image-puller system:serviceaccounts:cicd -n tasks-qa
-oc policy add-role-to-group system:image-puller system:serviceaccounts:qa -n tasks-build
-oc create deploymentconfig tasks --image=docker-registry.default.svc.cluster.local:5000/tasks/tasks:promoteToQA -n qa
-oc expose dc tasks --port=8080 -n qa
-oc expose svc tasks  -n qa
-
-oc create -f /opt/Openshft_homework/scripts/sample-pipeline -n cicd
-oc start-build sample-pipeline -n cicd
+#create and start pipeline
+oc create -f appdev/tasks-pipeline.yaml -n tasks-build
+oc start-build tasks-pipeline -n tasks-build
