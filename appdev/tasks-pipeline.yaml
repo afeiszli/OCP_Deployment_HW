@@ -14,7 +14,7 @@ spec:
       jenkinsfile: |-
         node('') {
           stage 'Build Tasks'
-            openshiftBuild(namespace:'tasks-build',buildConfig: 'tasks', showBuildLogs: 'true')
+            openshiftBuild(namespace:'tasks-build',buildConfig: 'openshift-tasks', showBuildLogs: 'true')
           stage 'Deploy Tasks in Dev'
             openshiftTag( namespace: 'openshift', sourceStream: 'openshift-tasks', sourceTag: 'latest', destinationStream: 'openshift-tasks', destinationTag: 'dev' )
             openshiftDeploy(namespace:'tasks-dev',deploymentConfig: 'openshift-tasks')
