@@ -80,6 +80,9 @@
   tasks: 
     - name: Get the Recycler
       shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest 
+    - name: Tag the Registry
+      shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.10.14
+    
 
 - name: Smoke Test
   hosts: localhost
