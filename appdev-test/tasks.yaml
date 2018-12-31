@@ -1,0 +1,52 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    description: Defines how to deploy openshift-tasks
+    template.alpha.openshift.io/wait-for-ready: 'true'
+  labels:
+    app: openshift-tasks
+    template: openshift-tasks
+  name: openshift-tasks
+spec:
+  replicas: 1
+  selector:
+    name: openshift-tasks
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: openshift-tasks
+      name: openshift-tasks
+    spec:
+      containers:
+        - image: >-
+            docker-registry.default.svc:5000/hw-space/openshift-tasks:${IMAGE_TAG}
+          imagePullPolicy: Always
+          name: openshift-tasks
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      restartPolicy: Always
+  test: false
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - openshift-tasks
+        from:
+          kind: ImageStreamTag
+          name: 'openshift-tasks:${IMAGE_TAG}'
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
