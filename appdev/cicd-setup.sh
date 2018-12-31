@@ -23,6 +23,7 @@ oc policy add-role-to-user edit system:serviceaccount:tasks-build:jenkins -n tas
 oc policy add-role-to-user edit system:serviceaccount:tasks-build:jenkins -n tasks-prod
 
 #give projects image pull permissions on openshift project
+oc policy add-role-to-user system:image-builder system:serviceaccount:tasks-build:jenkins -n openshift
 oc policy add-role-to-user system:image-builder system:serviceaccount:tasks-build:builder -n openshift
 oc policy add-role-to-user system:image-puller system:serviceaccount:tasks-dev:deployer -n openshift
 oc policy add-role-to-user system:image-puller system:serviceaccount:tasks-test:deployer -n openshift
