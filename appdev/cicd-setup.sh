@@ -8,7 +8,7 @@ oc new-app jenkins-persistent -n tasks-dev
 oc create is openshift-tasks -n openshift
 oc create -f appdev/tasks-build.yaml -n tasks-build
 oc process -f appdev/tasks.yaml -n tasks-dev | oc create -f -
-oc process -f appdev/tasks.yaml -n tasks-qa | oc create -f -
+oc process -f appdev/tasks.yaml -n tasks-test | oc create -f -
 oc process -f appdev/tasks.yaml -n tasks-prod | oc create -f -
 oc process -f appdev/tasks-pipeline.yaml -n cicd-dev | oc create -f -
 
