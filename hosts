@@ -2,6 +2,7 @@
 
 ###########################################################################
 ### Ansible Vars
+### HI THIS IS ALEX
 ###########################################################################
 timeout=60
 ansible_become=yes
@@ -14,6 +15,8 @@ openshift_disable_check="disk_availability,memory_availability,docker_image_avai
 
 openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true','runtime=docker']}, {'name': 'node-config-infra', 'labels': ['node-role.kubernetes.io/infra=true','runtime=docker']}, {'name': 'node-config-glusterfs', 'labels': ['runtime=docker']}, {'name': 'node-config-compute', 'labels': ['node-role.kubernetes.io/compute=true','runtime=docker'], 'edits': [{ 'key': 'kubeletArguments.pods-per-core','value': ['20']}]}]
 
+openshift_examples_modify_imagestreams=true
+
 #choose release version
 openshift_release='3.11'
 
@@ -22,12 +25,11 @@ oreg_url=registry.access.redhat.com/openshift3/ose-${component}:${version}
 
 openshift_deployment_type=openshift-enterprise
 #deployment_type=openshift-enterprise
-containerized=false
-#openshift_disable_check="memory_availability"
+#containerized=false
 
 # Default node selectors
-osm_default_node_selector='client=common'
-openshift_hosted_infra_selector="env=infra"
+#osm_default_node_selector={"client":"common"}
+#openshift_hosted_infra_selector={"env":"infra"}
 
 ###########################################################################
 ### OpenShift Master Vars
@@ -37,9 +39,9 @@ openshift_master_api_port=443
 openshift_master_console_port=443
 
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=loadbalancer1.c924.internal
-openshift_master_cluster_public_hostname=loadbalancer1.c924.example.opentlc.com
-openshift_master_default_subdomain=apps.c924.example.opentlc.com
+openshift_master_cluster_hostname=loadbalancer.1f3f.internal
+openshift_master_cluster_public_hostname=loadbalancer.1f3f.example.opentlc.com
+openshift_master_default_subdomain=apps.1f3f.example.opentlc.com
 #openshift_master_ca_certificate={'certfile': '/root/intermediate_ca.crt', 'keyfile': '/root/intermediate_ca.key'}
 openshift_master_overwrite_named_certificates=True
 
@@ -51,6 +53,9 @@ openshift_enable_unsupported_configurations=True
 ###########################################################################
 
 os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+
+osm_cluster_network_cidr=10.1.0.0/16
+openshift_portal_net=172.30.0.0/16
 
 ###########################################################################
 ### OpenShift Authentication Vars
@@ -162,6 +167,18 @@ openshift_prometheus_node_exporter_image_version=v3.9
 openshift_prometheus_node_exporter_image_version=v3.9
 
 ###########################################################################
+### OpenShift Service Catalog Vars
+###########################################################################
+
+openshift_enable_service_catalog=true
+
+template_service_broker_install=true
+# openshift_template_service_broker_namespaces=['openshift']
+
+ansible_service_broker_install=true
+ansible_service_broker_local_registry_whitelist=['.*-apb$']
+
+###########################################################################
 ### OpenShift Hosts
 ###########################################################################
 [OSEv3:children]
@@ -172,32 +189,49 @@ nodes
 nfs
 
 [lb]
-loadbalancer1.c924.internal
+loadbalancer.1f3f.internal
 
 [masters]
-master1.c924.internal
-master2.c924.internal
-master3.c924.internal
+master1.1f3f.internal
+master2.1f3f.internal
+master3.1f3f.internal
 
 [etcd]
-master1.c924.internal
-master2.c924.internal
-master3.c924.internal
+master1.1f3f.internal
+master2.1f3f.internal
+master3.1f3f.internal
+
 
 [nodes]
 ## These are the masters
-master1.c924.internal openshift_hostname=master1.c924.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
-master2.c924.internal openshift_hostname=master2.c924.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
-master3.c924.internal openshift_hostname=master3.c924.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
+master1.1f3f.internal openshift_node_group_name='node-config-master'
+master2.1f3f.internal openshift_node_group_name='node-config-master'
+master3.1f3f.internal openshift_node_group_name='node-config-master'
 
 ## These are infranodes
-infranode1.c924.internal openshift_hostname=infranode1.c924.internal  openshift_node_group_name='node-config-infra' openshift_node_labels="{'env':'infra'}"
-infranode2.c924.internal openshift_hostname=infranode2.c924.internal  openshift_node_group_name='node-config-infra' openshift_node_labels="{'env':'infra'}"
+infranode1.1f3f.internal openshift_node_group_name='node-config-infra'
+infranode2.1f3f.internal openshift_node_group_name='node-config-infra'
 
 ## These are regular nodes
-node1.c924.internal openshift_hostname=node1.c924.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'alpha'}"
-node2.c924.internal openshift_hostname=node2.c924.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'beta'}"
-node3.c924.internal openshift_hostname=node3.c924.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'common'}"
+node1.1f3f.internal openshift_node_group_name='node-config-compute'
+node2.1f3f.internal openshift_node_group_name='node-config-compute'
+node3.1f3f.internal openshift_node_group_name='node-config-compute'
+
+#COMMENTED OUT THESE TO TRY A DIFFERENT NODE CONFIG ABOVE
+#[nodes]
+## These are the masters
+#master1.1f3f.internal openshift_hostname=master1.1f3f.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
+#master2.1f3f.internal openshift_hostname=master2.1f3f.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
+#master3.1f3f.internal openshift_hostname=master3.1f3f.internal openshift_node_group_name='node-config-master' openshift_node_labels="{'env':'master'}"
+
+## These are infranodes
+#infranode1.1f3f.internal openshift_hostname=infranode1.1f3f.internal  openshift_node_group_name='node-config-infra' openshift_node_labels="{'env':'infra'}"
+#infranode2.1f3f.internal openshift_hostname=infranode2.1f3f.internal  openshift_node_group_name='node-config-infra' openshift_node_labels="{'env':'infra'}"
+
+## These are regular nodes
+#node1.1f3f.internal openshift_hostname=node1.1f3f.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'alpha'}"
+#node2.1f3f.internal openshift_hostname=node2.1f3f.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'beta'}"
+#node3.1f3f.internal openshift_hostname=node3.1f3f.internal  openshift_node_group_name='node-config-compute' openshift_node_labels="{'env':'compute', 'client':'common'}"
 
 [nfs]
-support1.c924.internal openshift_hostname=support1.c924.internal
+support1.1f3f.internal openshift_hostname=support1.1f3f.internal

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 echo "Copy a new hosts file to /etc/ansible/hosts"
-cp ../hosts /etc/ansible/hosts
+cp ./hosts.template /etc/ansible/hosts
+cat /etc/ansible/hosts
 
 echo "Set the current GUID to generate the inventory"
 GUID=`hostname|awk -F. '{print $2}'`
