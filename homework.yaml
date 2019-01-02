@@ -90,12 +90,14 @@
 - name: HPA configuration on production deployment of openshift-tasks
   hosts: localhost
   tasks:
-#    - name: Create LimitRange
-#      shell: oc create -f - ./appdev/hpa.yaml -n qa
-#    - name: Autoscale tasks
-#     shell: oc autoscale dc openshift-tasks --min 1 --max 3 --cpu-percent=85 -n qa
+    - name: Autoscale openshift-tasks
+      shell: oc autoscale dc openshift-tasks --max 3 --min 1 --cpu-percent 80 --name hpa-tasks -n tasks-prod
 
 - name: Creation of users for Alpha and Beta clients
+  hosts: masters
+  tasks:
+    - name: Create Users
+      script: ./scripts/create_users.sh
 
 - name: Assigning labels to the users according to its group
 
