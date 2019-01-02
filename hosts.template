@@ -1,6 +1,6 @@
 [OSEv3:vars]
 
-### Alex's Inventory File
+### MitziCom Template  Inventory File
 ###########################################################################
 ### Ansible Vars
 ###########################################################################
@@ -109,11 +109,11 @@ openshift_master_htpasswd_file=/root/htpasswd.openshift
 # Prometheus Metrics
 #########################
 
-openshift_hosted_prometheus_deploy=false
+openshift_hosted_prometheus_deploy=true
 openshift_prometheus_namespace=openshift-metrics
 openshift_prometheus_node_selector={"node-role.kubernetes.io/infra":"true"}
 
-openshift_cluster_monitoring_operator_install=false
+openshift_cluster_monitoring_operator_install=true
 
 
 ########################
@@ -121,7 +121,7 @@ openshift_cluster_monitoring_operator_install=false
 ########################
 
 
-openshift_metrics_install_metrics=False
+openshift_metrics_install_metrics=True
 
 openshift_metrics_storage_kind=nfs
 openshift_metrics_storage_access_modes=['ReadWriteOnce']
@@ -141,8 +141,8 @@ openshift_metrics_heapster_nodeselector={"node-role.kubernetes.io/infra": "true"
 openshift_metrics_duration=2
 
 # Suggested Quotas and limits for Prometheus components:
-openshift_prometheus_memory_requests=2Gi
-openshift_prometheus_cpu_requests=750m
+openshift_prometheus_memory_requests=1Gi
+openshift_prometheus_cpu_requests=400m
 openshift_prometheus_memory_limit=2Gi
 openshift_prometheus_cpu_limit=750m
 openshift_prometheus_alertmanager_memory_requests=300Mi
@@ -165,8 +165,8 @@ openshift_grafana_node_exporter=true
 # Cluster Logging
 ########################
 
-openshift_logging_install_logging=False
-openshift_logging_install_eventrouter=False
+openshift_logging_install_logging=True
+openshift_logging_install_eventrouter=True
 
 openshift_logging_storage_kind=nfs
 openshift_logging_storage_access_modes=['ReadWriteOnce']
@@ -267,9 +267,9 @@ infranode1.GUID.internal openshift_node_group_name='node-config-infra' openshift
 infranode2.GUID.internal openshift_node_group_name='node-config-infra' openshift_node_problem_detector_install=true
 
 ## These are regular nodes
-node1.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true
-node2.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true
-
+node1.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true openshift_node_labels="{'client':'alpha'}"
+node2.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true openshift_node_labels="{'client':'beta'}"
+node3.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true openshift_node_labels="{'client':'common'}"
 
 [nfs]
 support1.GUID.internal
