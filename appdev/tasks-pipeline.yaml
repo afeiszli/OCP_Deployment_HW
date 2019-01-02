@@ -12,22 +12,25 @@ spec:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfile: |-
-        node('') {
-          stage 'Build Tasks'
+        node {
+          stage ('Build Tasks'){
             openshiftBuild(namespace:'tasks-build',buildConfig: 'openshift-tasks', showBuildLogs: 'true')
-          stage 'Deploy Tasks in Dev'
+          }
+          stage('Deploy Tasks in Dev'){
             openshiftTag( namespace: 'openshift', sourceStream: 'openshift-tasks', sourceTag: 'latest', destinationStream: 'openshift-tasks', destinationTag: 'dev' )
             openshiftDeploy(namespace:'tasks-dev',deploymentConfig: 'openshift-tasks')
             openshiftScale(namespace:'tasks-dev',deploymentConfig: 'openshift-tasks',replicaCount: '1')
-          stage 'Deploy Tasks in Test'
+          }
+          stage('Deploy Tasks in Test'){
             input 'Ready to move latest version to Test?'
             openshiftTag(namespace: 'openshift', sourceStream: 'openshift-tasks',  sourceTag: 'dev', destinationStream: 'openshift-tasks', destinationTag: 'test')
             openshiftDeploy(namespace:'tasks-test',deploymentConfig: 'openshift-tasks')
             openshiftScale(namespace:'tasks-test',deploymentConfig: 'openshift-tasks',replicaCount: '1')
-          stage 'Deploy Tasks in Prod'
+          }
+          stage('Deploy Tasks in Prod'){
             input 'Ready to move latest version to Prod?'
             openshiftTag(namespace: 'openshift', sourceStream: 'openshift-tasks',  sourceTag: 'test', destinationStream: 'openshift-tasks', destinationTag: 'prod')
             openshiftDeploy(namespace:'tasks-prod',deploymentConfig: 'openshift-tasks')
             openshiftScale(namespace:'tasks-prod',deploymentConfig: 'openshift-tasks',replicaCount: '1')
-
+          }
         }

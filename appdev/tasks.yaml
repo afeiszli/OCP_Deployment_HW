@@ -67,7 +67,7 @@ objects:
           deploymentconfig: openshift-tasks
       spec:
         containers:
-        - image: docker-registry.default.svc:5000/tasks-dev/openshift-tasks@sha256:387f52f03cf46cbbd2e6259b90dba250eb8b0cfcf0202cdd4085429c6c0e8d38
+        - image: 'docker-registry.default.svc:5000/openshift/openshift-tasks:${VERSION}'
           imagePullPolicy: Always
           name: openshift-tasks
           ports:
@@ -95,6 +95,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: 'openshift-tasks:${VERSION}'
+          namespace: openshift
       type: ImageChange
 - apiVersion: route.openshift.io/v1
   kind: Route
