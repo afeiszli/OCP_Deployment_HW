@@ -1,52 +1,14 @@
 ---
-- name: Setup project request template
-  hosts: localhost 
-  tasks: 
-    - name: Add template to default project
-      shell: "oc create -f ./project-lr-template.yaml -n default"
-- name: Change master config for project template
-  hosts: masters
-  tasks:
-    - name: Add template to master config
-      lineinfile:
-        regexp: "  projectRequestTemplate"
-        dest: "/etc/origin/master/master-config.yaml"
-        line: '  projectRequestTemplate: "default/project-lr-request"'
-        state: present
-    - name: Restart API
-      service:
-        name: atomic-openshift-master-api
-        state: restarted
-
-- name: Smoke Test
-  hosts: localhost
-  tasks:
-    - name: Create project
-      shell: oc process -f ./appdev/project.yaml -p PROJECT_NAME=test-project | oc create -f -
-    - name: Deploy app to project
-      shell: oc new-app -n test-project nodejs-mongo-persistent 
-
-- name: Jenkins Setup
-  hosts: localhost
-  tasks:
-    - name: jenkins setup
-      script: ./appdev/cicd-setup.sh
-
-- name: HPA configuration on production deployment of openshift-tasks
-  hosts: localhost
-  tasks:
-    - name: Autoscale openshift-tasks
-      shell: oc autoscale dc openshift-tasks --max 3 --min 1 --cpu-percent 80 --name hpa-tasks -n tasks-prod
-
 - name: Creation of users for Alpha and Beta clients
   hosts: masters
   tasks:
     - name: Create Users and assign labels
       script: ./scripts/create_users.sh
-
 - name: Setup the environment for Alpha and Beta clients
-  hosts: localhost
+  hosts: masters[0]
   tasks:
+    - name: Label Nodes
+      shell: oc label node node1.$GUID.internal client=alpha; oc label node node2.$GUID.internal client=beta; oc label node node3.$GUID.internal client=common
     - name: Create Alpha Project
       shell: oc new-project alpha; oc patch namespace alpha -p '{"metadata":{"annotations":{"openshift.io/node-selector":"client=alpha"}}}';  oc label namespace alpha client=alpha; oc adm policy add-role-to-group edit alpha -n alpha
     - name: Create Beta Project

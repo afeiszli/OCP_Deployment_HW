@@ -120,7 +120,7 @@
   hosts: masters[0]
   tasks:
     - name: Label Nodes
-      script: ./scripts/label_nodes.sh
+      shell: oc label node node1.$GUID.internal client=alpha; oc label node node2.$GUID.internal client=beta; oc label node node3.$GUID.internal client=common
     - name: Create Alpha Project
       shell: oc new-project alpha; oc patch namespace alpha -p '{"metadata":{"annotations":{"openshift.io/node-selector":"client=alpha"}}}';  oc label namespace alpha client=alpha; oc adm policy add-role-to-group edit alpha -n alpha
     - name: Create Beta Project
