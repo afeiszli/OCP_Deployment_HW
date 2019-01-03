@@ -267,9 +267,9 @@ infranode1.GUID.internal openshift_node_group_name='node-config-infra' openshift
 infranode2.GUID.internal openshift_node_group_name='node-config-infra' openshift_node_problem_detector_install=true
 
 ## These are regular nodes
-node1.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true openshift_node_labels="{'client':'alpha'}"
-node2.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true openshift_node_labels="{'client':'beta'}"
-node3.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true openshift_node_labels="{'client':'common'}"
+node1.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true
+node2.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true
+node3.GUID.internal openshift_node_group_name='node-config-compute' openshift_node_problem_detector_install=true
 
 [nfs]
 support1.GUID.internal

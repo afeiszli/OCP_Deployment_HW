@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: project-request
+  name: project-lr-request
 objects:
 - apiVersion: v1
   kind: Project

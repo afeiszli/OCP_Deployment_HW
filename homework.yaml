@@ -71,17 +71,19 @@
       shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest 
     - name: Tag the Registry
       shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.10.14
-    
 - name: Setup project request template
-  hosts: localhost 
-  tasks: 
+  hosts: localhost
+  tasks:
     - name: Add template to default project
-      shell: "oc create -f ./project-template.yaml -n default"
+      shell: "oc create -f ./project-lr-template.yaml -n default"
+- name: Change master config for project template
+  hosts: masters
+  tasks: 
     - name: Add template to master config
       lineinfile:
         regexp: "  projectRequestTemplate"
         dest: "/etc/origin/master/master-config.yaml"
-        line: '  projectRequestTemplate: "default/project-request"'
+        line: '  projectRequestTemplate: "default/project-lr-request"'
         state: present
     - name: Restart API
       service:
@@ -115,8 +117,10 @@
       script: ./scripts/create_users.sh
 
 - name: Setup the environment for Alpha and Beta clients
-  hosts: localhost
+  hosts: masters[0]
   tasks:
+    - name: Label Nodes
+      script: ./scripts/label_nodes.sh
     - name: Create Alpha Project
       shell: oc new-project alpha; oc patch namespace alpha -p '{"metadata":{"annotations":{"openshift.io/node-selector":"client=alpha"}}}';  oc label namespace alpha client=alpha; oc adm policy add-role-to-group edit alpha -n alpha
     - name: Create Beta Project
