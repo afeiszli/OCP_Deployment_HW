@@ -86,9 +86,7 @@
         line: '  projectRequestTemplate: "default/project-lr-request"'
         state: present
     - name: Restart API
-      service:
-        name: atomic-openshift-master-api
-        state: restarted
+      shell: /usr/local/bin/master-restart api; /usr/local/bin/master-restart controllers
 
 - name: Smoke Test
   hosts: localhost

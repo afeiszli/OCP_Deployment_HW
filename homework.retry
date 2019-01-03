@@ -1,1 +1,10 @@
-master1.ca65.internal
+infranode1.2633.internal
+infranode2.2633.internal
+loadbalancer.2633.internal
+master1.2633.internal
+master2.2633.internal
+master3.2633.internal
+node1.2633.internal
+node2.2633.internal
+node3.2633.internal
+support1.2633.internal
