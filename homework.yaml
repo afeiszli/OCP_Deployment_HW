@@ -96,7 +96,7 @@
         line: '  projectRequestTemplate: "default/project-lr-request"'
         state: present
     - name: Restart API
-      shell: /usr/local/bin/master-restart api; /usr/local/bin/master-restart controllers
+      shell: /usr/local/bin/master-restart api; /usr/local/bin/master-restart controllers; sleep 100
 
 - name: Smoke Test
   hosts: localhost
