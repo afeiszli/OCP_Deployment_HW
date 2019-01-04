@@ -1,6 +1,6 @@
 #create projects
 oc new-project tasks-build
-oc new project tasks-dev
+oc new-project tasks-dev
 oc new-project tasks-test
 oc new-project tasks-prod
 
@@ -26,10 +26,12 @@ oc policy add-role-to-user edit system:serviceaccount:tasks-build:jenkins -n ope
 #give projects image pull permissions on openshift project
 oc policy add-role-to-user image-builder system:serviceaccount:tasks-build:jenkins -n openshift
 oc policy add-role-to-user image-builder system:serviceaccount:tasks-build:builder -n openshift
+oc policy add-role-to-user edit system:serviceaccount:tasks-build:builder -n openshift
 oc policy add-role-to-user system:image-puller system:serviceaccount:tasks-dev:deployer -n openshift
 oc policy add-role-to-user system:image-puller system:serviceaccount:tasks-test:deployer -n openshift
 oc policy add-role-to-user system:image-puller system:serviceaccount:tasks-prod:deployer -n openshift
 
 #create and start pipeline
 oc create -f appdev/tasks-pipeline.yaml -n tasks-build
+sleep 60
 oc start-build tasks-pipeline -n tasks-build

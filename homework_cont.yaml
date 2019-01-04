@@ -1,18 +1,6 @@
 ---
-- name: Creation of users for Alpha and Beta clients
-  hosts: masters
-  tasks:
-    - name: Create Users and assign labels
-      script: ./scripts/create_users.sh
 - name: Setup the environment for Alpha and Beta clients
   hosts: masters[0]
   tasks:
-    - name: Label Nodes
-      shell: oc label node node1.$GUID.internal client=alpha; oc label node node2.$GUID.internal client=beta; oc label node node3.$GUID.internal client=common
-    - name: Create Alpha Project
-      shell: oc new-project alpha; oc patch namespace alpha -p '{"metadata":{"annotations":{"openshift.io/node-selector":"client=alpha"}}}';  oc label namespace alpha client=alpha; oc adm policy add-role-to-group edit alpha -n alpha
-    - name: Create Beta Project
-      shell: oc new-project beta; oc patch namespace beta -p '{"metadata":{"annotations":{"openshift.io/node-selector":"client=beta"}}}'; oc label namespace beta client=beta; oc adm policy add-role-to-group edit beta -n beta
-
-
-
+    - name: Label Nodes and Setup Projects
+      script: ./scripts/label_nodes.sh
