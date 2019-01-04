@@ -102,7 +102,7 @@
   hosts: localhost
   tasks:
     - name: Create project
-      shell: oc process -f ./appdev/project.yaml -p PROJECT_NAME=test-project | oc create -f -
+      shell: oc new-project test-project
     - name: Deploy app to project
       shell: oc new-app -n test-project nodejs-mongo-persistent 
 

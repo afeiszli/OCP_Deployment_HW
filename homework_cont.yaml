@@ -1,6 +1,0 @@
----
-- name: Setup the environment for Alpha and Beta clients
-  hosts: masters[0]
-  tasks:
-    - name: Label Nodes and Setup Projects
-      script: ./scripts/label_nodes.sh
