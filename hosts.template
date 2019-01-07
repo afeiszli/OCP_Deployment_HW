@@ -17,10 +17,10 @@ openshift_deployment_type=openshift-enterprise
 
 openshift_disable_check="disk_availability,memory_availability,docker_image_availability"
 
-#openshift_image_tag=v3.11.51
+openshift_image_tag=v3.11.51
 # Use this variable to specify an RPM version to install or configure.
-#openshift_pkg_version=-3.11.51
-#openshift_release="3.11.51"
+openshift_pkg_version=-3.11.51
+openshift_release="3.11.51"
 
 
 # Node Groups
@@ -35,7 +35,7 @@ openshift_enable_olm=false
 ### OpenShift Registries Locations
 ###########################################################################
 
-#oreg_url=registry.access.redhat.com/openshift3/ose-${component}:${version}
+oreg_url=registry.access.redhat.com/openshift3/ose-${component}:${version}
 
 #oreg_url=registry.redhat.io/openshift3/ose-${component}:${version}
 #oreg_auth_user=REPLACE_ME
@@ -44,7 +44,7 @@ openshift_enable_olm=false
 # For Operator Framework Images
 #openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'REPLACE_ME','password':'REPLACE_ME','test_image':'mongodb/enterprise-operator:0.3.2'}]
 
-#openshift_examples_modify_imagestreams=true
+openshift_examples_modify_imagestreams=true
 
 
 # Set this line to enable NFS
@@ -177,7 +177,7 @@ openshift_logging_storage_volume_name=logging
 openshift_logging_storage_volume_size=10Gi
 openshift_logging_storage_labels={'storage': 'logging'}
 openshift_logging_es_pvc_storage_class_name=''
-openshift_logging_es_memory_limit=8Gi
+openshift_logging_es_memory_limit=4Gi
 openshift_logging_es_cluster_size=1
 openshift_logging_curator_default_days=2
 

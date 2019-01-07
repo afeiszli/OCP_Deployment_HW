@@ -23,7 +23,7 @@ spec:
     sourceStrategy:
       from:
         kind: ImageStreamTag
-        name: 'jboss-eap70-openshift:1.7'
+        name: 'jboss-eap71-openshift:latest'
         namespace: openshift
     type: Source
   triggers:

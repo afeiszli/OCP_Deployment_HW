@@ -1,3 +1,10 @@
-master1.323d.internal
-master2.323d.internal
-master3.323d.internal
+infranode1.fa74.internal
+infranode2.fa74.internal
+loadbalancer.fa74.internal
+master1.fa74.internal
+master2.fa74.internal
+master3.fa74.internal
+node1.fa74.internal
+node2.fa74.internal
+node3.fa74.internal
+support1.fa74.internal
