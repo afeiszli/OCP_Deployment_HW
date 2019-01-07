@@ -5,8 +5,12 @@ a fully automated deployment of OpenShift.
 
 Installation instructions
 1. `ssh to your bastion host`
+
 2. `sudo su; cd ~ (this is not necessary but recommended for organization. Can run following commands from anywhere, but if not running as root user must use 'sudo ansible...'`
+
 2. `git clone https://github.com/afeiszli/OCP_Deployment_HW.git`
+
 3. `cd OCP_Deployment_HW`
+
 4. `ansible-playbook homework.yaml`
 
