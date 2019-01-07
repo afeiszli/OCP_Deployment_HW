@@ -1,19 +1,12 @@
-= OpenShift Container Platform - Advanced Deployment - Homework Template
+= OpenShift Container Platform - Advanced Deployment - Instructions
 
-Use the files in this repo to guide you on your way to creating
+Use the files in this repo to create in your environment to create
 a fully automated deployment of OpenShift.
 
-The person grading the assignment will 
-
-* launch a new homework environment
-* clone a repo
-* execute a command
-* examine the output through log files
-* exmaine the deployed OpenShift to ensure that all aspects of the homework were 
-deployed properly.
-
-
-Good luck!  And try to have fun!
-
-
+Installation instructions
+1. `ssh to your bastion host`
+2. `sudo su; cd ~ (this is not necessary but recommended for organization. Can run following commands from anywhere, but if not running as root user must use 'sudo ansible...'`
+2. `git clone https://github.com/afeiszli/OCP_Deployment_HW.git`
+3. `cd OCP_Deployment_HW`
+4. `ansible-playbook homework.yaml`
 
